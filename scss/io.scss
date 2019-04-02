@@ -1,0 +1,41 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+
+@import "~bootstrap/scss/vendor/rfs";
+@import "~bootstrap/scss/mixins/deprecate";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "~bootstrap/scss/mixins/image";
+@import "~bootstrap/scss/mixins/screen-reader";
+@import "~bootstrap/scss/mixins/text-truncate";
+@import "~bootstrap/scss/mixins/caret";
+@import "~bootstrap/scss/mixins/lists";
+@import "~bootstrap/scss/mixins/transition";
+@import "~bootstrap/scss/mixins/clearfix";
+@import "~bootstrap/scss/mixins/grid-framework";
+@import "~bootstrap/scss/mixins/grid";
+
+@import "~bootstrap/scss/root";
+@import "~bootstrap/scss/grid";
+
+@import "~bootstrap/scss/utilities/clearfix";
+@import "~bootstrap/scss/utilities/display";
+@import "~bootstrap/scss/utilities/embed";
+@import "~bootstrap/scss/utilities/screenreaders";
+
+@import "reset";
+@import "media";
+@import "utils/padding";
+@import "mixins/lists";
+@import "mixins/grid";
+@import "mixins/overlay";
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/** TODO: phase out this, and go default img-fluid instead? **/
+.img-fluid {
+  @include img-fluid;
+}

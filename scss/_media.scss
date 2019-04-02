@@ -1,0 +1,222 @@
+@charset "UTF-8";
+
+$media-expressions: (
+  'screen': 'screen',
+  'print': 'print',
+  'handheld': 'handheld',
+  'landscape': '(orientation: landscape)',
+  'portrait': '(orientation: portrait)',
+  'retina2x': '(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi), (min-resolution: 2dppx)',
+  'retina3x': '(-webkit-min-device-pixel-ratio: 3), (min-resolution: 350dpi), (min-resolution: 3dppx)'
+) !default;
+
+$unit-intervals: (
+  'px': 1,
+  'em': 0.01,
+  'rem': 0.1,
+  '': 0
+) !default;
+
+$im-default-operator: '=' !default;
+
+@function im-log($message) {
+  @if feature-exists('at-error') {
+    @error $message;
+  }
+  @return $message;
+}
+
+@function get-expression-operator($expression) {
+  @each $operator in ('>=', '>', '<=', '<', '≥', '≤') {
+    @if str-index($expression, $operator) {
+      @return $operator;
+    }
+  }
+
+  @return '';
+}
+
+@function get-expression-prefix($operator) {
+  @return if(index(('<', '<=', '≤'), $operator), 'max', 'min');
+}
+
+@function get-expression-value($expression, $operator) {
+  $operator-index: str-index($expression, $operator);
+  $value: str-slice($expression, $operator-index + str-length($operator));
+
+  @if map-has-key($grid-breakpoints, $value) {
+    $value: map-get($grid-breakpoints, $value);
+  } @else {
+    $value: to-number($value);
+  }
+
+  $interval: map-get($unit-intervals, unit($value));
+
+  @if not $interval {
+    $_: im-log('Unknown unit `#{unit($value)}`.');
+  }
+
+  @if $operator == '>' {
+    $value: $value + $interval;
+  } @else if $operator == '<' {
+    $value: $value - $interval;
+  }
+
+  @return $value;
+}
+
+@function parse-expression($expression) {
+  // If it is part of $media-expressions, it has no operator
+  // then there is no need to go any further, just return the value
+
+  @if map-has-key($media-expressions, $expression) {
+
+    @return map-get($media-expressions, $expression);
+  }
+
+  $operator: get-expression-operator($expression);
+
+  @if $operator == '' {
+    $operator: $im-default-operator;
+    $expression: $operator + $expression;
+  }
+
+  $value: get-expression-value($expression, $operator);
+  $q: build-query($operator, $expression);
+
+  @return $q;
+}
+
+@function bpnext($name, $breakpoints: $grid-breakpoints, $breakpoint-names: map-keys($breakpoints)) {
+  $n: index($breakpoint-names, $name);
+  @return if($n != null and $n < length($breakpoint-names), nth($breakpoint-names, $n + 1), null);
+}
+
+@function bpmin($name, $breakpoints: $grid-breakpoints) {
+  $min: map-get($breakpoints, $name);
+  @return if($min != 0, $min, null);
+}
+
+@function bpmax($name, $breakpoints: $grid-breakpoints) {
+  $next: bpnext($name, $breakpoints);
+  @return if($next, bpmin($next, $breakpoints) - .02, null);
+}
+
+@function build-query($operator, $expression) {
+  $_bp: null;
+  $value: get-expression-value($expression, $operator);
+  $operator-index: str-index($expression, $operator);
+  $size: str-slice($expression, $operator-index + str-length($operator));
+
+  @if $operator == '>=' {
+    @if $value > 0 {
+      $_bp: '(min-width: #{$value})';
+    }
+  } @else if $operator == '<=' {
+    $max: bpmax($size);
+    @if $max {
+      $_bp: '(max-width: #{$max})';
+    }
+  } @else if $operator == '=' {
+    $min: bpmin($size);
+    $max: bpmax($size);
+
+    @if $min != null and $max != null {
+      $_bp: "(min-width: #{$min}) and (max-width: #{$max})"
+    } @else if $max == null {
+      @if $min {
+        $_bp: "(min-width: #{$min})";
+      } @else {
+        $_bp: null;
+      }
+    } @else if $min == null {
+      @if $max {
+        $_bp: "(max-width: #{$max})";
+      } @else {
+        $_bp: null;
+      }
+    }
+  }
+  @return $_bp;
+}
+
+@function slice($list, $start: 1, $end: length($list)) {
+  @if length($list) < 1 or $start > $end {
+    @return ();
+  }
+
+  $result: ();
+
+  @for $i from $start through $end {
+    $result: append($result, nth($list, $i));
+  }
+
+  @return $result;
+}
+
+@function to-number($value) {
+  @if type-of($value) == 'number' {
+    @return $value;
+  } @else if type-of($value) != 'string' {
+    $_: im-log('Value for `to-number` should be a number or a string.');
+  }
+
+  $first-character: str-slice($value, 1, 1);
+  $result: 0;
+  $digits: 0;
+  $minus: ($first-character == '-');
+  $numbers: ('0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9);
+
+  // Remove +/- sign if present at first character
+  @if ($first-character == '+' or $first-character == '-') {
+    $value: str-slice($value, 2);
+  }
+
+  @for $i from 1 through str-length($value) {
+    $character: str-slice($value, $i, $i);
+
+    @if not (index(map-keys($numbers), $character) or $character == '.') {
+      @return to-length(if($minus, -$result, $result), str-slice($value, $i))
+    }
+
+    @if $character == '.' {
+      $digits: 1;
+    } @else if $digits == 0 {
+      $result: $result * 10 + map-get($numbers, $character);
+    } @else {
+      $digits: $digits * 10;
+      $result: $result + map-get($numbers, $character) / $digits;
+    }
+  }
+
+  @return if($minus, -$result, $result);
+}
+
+@function to-length($value, $unit) {
+  $units: ('px': 1px, 'cm': 1cm, 'mm': 1mm, '%': 1%, 'ch': 1ch, 'pc': 1pc, 'in': 1in, 'em': 1em, 'rem': 1rem, 'pt': 1pt, 'ex': 1ex, 'vw': 1vw, 'vh': 1vh, 'vmin': 1vmin, 'vmax': 1vmax);
+
+  @if not index(map-keys($units), $unit) {
+    $_: im-log('Invalid unit `#{$unit}`.');
+  }
+
+  @return $value * map-get($units, $unit);
+}
+
+@mixin media($conditions...) {
+  @if (length($conditions) == 0) {
+    @content;
+  } @else if (length($conditions) > 0) {
+    $_exp: parse-expression(nth($conditions, 1));
+    @if $_exp {
+      @media #{unquote($_exp)} {
+        @include media(slice($conditions, 2)...) {
+          @content;
+        }
+      }
+    } @else {
+      @include media(slice($conditions, 2)...) {
+        @content;
+      }
+    }
+  }
+}

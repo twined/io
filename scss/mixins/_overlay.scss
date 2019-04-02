@@ -1,0 +1,27 @@
+@mixin hover-overlay($color: white, $ease: '1s') {
+  .img-wrapper, picture {
+    position: relative;
+    transition: opacity #{$ease} ease;
+
+    &:after {
+      content: ' ';
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: $color;
+      transition: opacity #{$ease} ease;
+    }
+  }
+
+  &:hover {
+    .img-wrapper, picture {
+      &:after {
+        opacity: 0.2;
+        transition: opacity 1s ease;
+      }
+    }
+  }
+}

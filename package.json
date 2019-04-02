@@ -1,0 +1,31 @@
+{
+  "name": "io",
+  "description": "SCSS helpers",
+  "version": "0.1.0",
+  "keywords": [
+    "scss",
+    "responsive",
+    "front-end",
+    "framework",
+    "web"
+  ],
+  "homepage": "https://github.com/twined/io",
+  "author": "Univers/Twined",
+  "style": "",
+  "sass": "scss/io.scss",
+  "main": "scss/io.scss",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twined/io.git"
+  },
+  "bugs": {
+    "url": "https://github.com/twined/io/issues"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^4.3.1"
+  },
+  "files": [
+    "scss/**/*.scss"
+  ]
+}

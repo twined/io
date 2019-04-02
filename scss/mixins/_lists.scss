@@ -1,0 +1,27 @@
+@mixin list-unstyled {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+/* how much margin is added to the right of each list item, EXCEPT last item */
+$list-inline-padding: (
+  xs: 0,
+  sm: 0,
+  md: 55px,
+  lg: 55px
+);
+
+@mixin list-item-inline {
+  display: inline-block;
+  white-space: nowrap;
+
+  &:not(:last-of-type) {
+    @each $bp-name, $bp-size in $grid-breakpoints {
+      @include media('>=#{$bp-name}') {
+        margin-right: map-get($list-inline-padding, $bp-name);
+      }
+    }
+  }
+}
