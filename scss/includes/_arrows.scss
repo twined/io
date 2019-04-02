@@ -1,0 +1,32 @@
+span[class^="arrow-"] {
+  transition: all 150ms ease;
+  display: inline-block;
+  backface-visibility: hidden;
+}
+
+a:hover {
+  span.arrow-r {
+    transform: translateX($io-arrow-travel);
+    backface-visibility: hidden;
+  }
+
+  span.arrow-l {
+    transform: translateX($io-arrow-travel * -1);
+    backface-visibility: hidden;
+  }
+
+  span.arrow-u {
+    transform: translateY($io-arrow-travel * -1);
+    backface-visibility: hidden;
+  }
+
+  span.arrow-d {
+    transform: translateY($io-arrow-travel);
+    backface-visibility: hidden;
+  }
+
+  span.arrow-ne {
+    transform: translateY($io-arrow-travel * -1) translateX($io-arrow-travel);
+    backface-visibility: hidden;
+  }
+}
