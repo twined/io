@@ -1,12 +1,87 @@
 @mixin container() {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+
   @each $bp-name, $bp-size in $grid-breakpoints {
     @include media($bp-name) {
       padding-right: map-get($container-padding, $bp-name);
       padding-left: map-get($container-padding, $bp-name);
-
     }
   }
-  width: 100%;
-  margin-right: auto;
-  margin-left: auto;
+}
+
+@mixin col($size, $right-pad: 0) {
+  position: relative;
+  $percentage: percentage($size / 12);
+  @if $right-pad > 0 {
+    @each $bp-name, $bp-size in $grid-breakpoints {
+      @include media('>=#{$bp-name}') {
+        flex: 0 0 calc(#{$percentage} + (#{map-get($gutters, $bp-name) * $right-pad / 2}));
+      }
+    }
+  } @else {
+    flex: 0 0 $percentage;
+    max-width: $percentage;
+  }
+}
+
+@mixin col-tight() {
+  @include media(lg) {
+    padding-right: 50%;
+  }
+
+  @include media(md) {
+    padding-right: 40%;
+  }
+
+  @include media(sm) {
+    padding-right: 20%;
+  }
+
+  @include media(xs) {
+    padding-right: 5%;
+  }
+
+}
+
+@mixin pad($dir, $times: 1) {
+  @each $bp-name, $bp-size in $grid-breakpoints {
+    @include media('>=#{$bp-name}') {
+      padding-#{$dir}: map-get($gutters, $bp-name) * $times / 2;
+    }
+  }
+}
+
+@mixin pull($dir, $times: 1) {
+  @each $bp-name, $bp-size in $grid-breakpoints {
+    @include media('>=#{$bp-name}') {
+      margin-#{$dir}: map-get($gutters, $bp-name) * $times / 2 * -1;
+    }
+  }
+}
+
+@mixin push($dir, $times: 1) {
+  @each $bp-name, $bp-size in $grid-breakpoints {
+    @include media('>=#{$bp-name}') {
+      margin-#{$dir}: map-get($gutters, $bp-name) * $times / 2;
+    }
+  }
+}
+
+@mixin space($selector, $size, $mq: 'all') {
+  $size-map: map-get($io-padding-map, $size);
+  @if $mq == 'all' {
+    @each $bp-name, $data in $size-map {
+      @include media('>=#{$bp-name}') {
+        #{$selector}: #{$data};
+      }
+    }
+  }
+  @else {
+    $data: map-get($size-map, $mq);
+    @include media($mq) {
+      #{$selector}: #{$data};
+    }
+  }
 }
