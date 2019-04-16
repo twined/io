@@ -1,9 +1,14 @@
 
-@mixin fontsize($size, $lineheight: null) {
+@mixin fontsize($size, $lineheight: null, $override: null) {
   @each $bp-name, $bp-size in $grid-breakpoints {
     $font-data: map-get($io-font-sizes, $size);
-    @include media('<=#{$bp-name}') {
-      font-size: map-get($font-data, $bp-name);
+    @include media('>=#{$bp-name}') {
+      @if $override {
+        font-size: map-get($font-data, $bp-name) * $override;
+      } @else {
+        font-size: map-get($font-data, $bp-name);
+      }
+
       @if $lineheight {
         line-height: $lineheight;
       } @else {
