@@ -82,3 +82,11 @@ $io-line-heights: (
   md: 1.6,
   lg: 1.6
 ) !default;
+
+/* how much margin is added to the right of each list item, EXCEPT last item */
+$io-list-inline-padding: (
+  xs: 0,
+  sm: 0,
+  md: 55px,
+  lg: 55px
+) !default;

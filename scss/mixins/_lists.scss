@@ -5,14 +5,6 @@
   padding: 0;
 }
 
-/* how much margin is added to the right of each list item, EXCEPT last item */
-$io-list-inline-padding: (
-  xs: 0,
-  sm: 0,
-  md: 55px,
-  lg: 55px
-) !default;
-
 @mixin list-item-inline {
   display: inline-block;
   white-space: nowrap;
