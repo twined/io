@@ -17,3 +17,47 @@
     }
   }
 }
+
+@mixin fontsize-rfs($fsize, $bp: null, $lineheight: null) {
+  $font-data: map-get($io-font-sizes, $fsize);
+
+  @if $bp {
+    @include media('#{$bp}') {
+      $font-size: map-get($font-data, $bp);
+      @include responsive-font-size($font-size, $bp);
+
+      @if $lineheight {
+        line-height: $lineheight;
+      } @else {
+        line-height: map-get($io-line-heights, $bp-name);
+      }
+    }
+  } @else {
+    @each $bp-name, $bp-size in $grid-breakpoints {
+      @include media('>=#{$bp-name}') {
+        $font-size: map-get($font-data, $bp-name);
+        @include responsive-font-size($font-size, $bp-name);
+
+        @if $lineheight {
+          line-height: $lineheight;
+        } @else {
+          line-height: map-get($io-line-heights, $bp-name);
+        }
+      }
+    }
+  }
+
+
+}
+
+@mixin paragraph-margin($size, $line-height: 1.6) {
+  @each $bp-name, $bp-size in $grid-breakpoints {
+    $font-data: map-get($io-font-sizes, $size);
+    @include media('>=#{$bp-name}') {
+      margin-bottom: map-get($font-data, $bp-name) * $line-height;
+      &:last-of-type {
+        margin-bottom: 0 !important;
+      }
+    }
+  }
+}

@@ -90,3 +90,43 @@ $io-list-inline-padding: (
   md: 55px,
   lg: 55px
 ) !default;
+
+
+//
+// RFS
+//
+
+// Base font size
+$rfs-base-font-size: 1.25rem !default;
+$rfs-font-size-unit: rem !default;
+
+// Breakpoint at where font-size starts decreasing if screen width is smaller
+$rfs-breakpoint: 1920px !default;
+$rfs-breakpoint-unit: px !default;
+
+// Factor of decrease
+$rfs-factor: 10 !default;
+
+// 1 rem = $rfs-rem-value px
+$rfs-rem-value: 16 !default;
+
+@if $rfs-font-size-unit != rem and $rfs-font-size-unit != px {
+  @error "`#{$rfs-font-size-unit}` is not a valid unit for $rfs-font-size-unit. Use `px` or `rem`.";
+}
+
+@if $rfs-breakpoint-unit != px and $rfs-breakpoint-unit != em and $rfs-breakpoint-unit != rem {
+  @error "`#{$rfs-breakpoint-unit}` is not a valid unit for $rfs-breakpoint-unit. Use `px`, `em` or `rem`.";
+}
+
+// Resize font size based on screen height and width
+$rfs-two-dimensional: false !default;
+
+@if type-of($rfs-factor) != "number" or $rfs-factor <= 1 {
+  @error "`#{$rfs-factor}` is not a valid  $rfs-factor, it must be greater than 1.";
+}
+
+// Generate enable or disable classes. Possibilities: false, "enable" or "disable"
+$rfs-class: false !default;
+
+// Safari iframe resize bug: https://github.com/twbs/rfs/issues/14
+$rfs-safari-iframe-resize-bug-fix: false !default;

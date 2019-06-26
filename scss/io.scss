@@ -1,7 +1,6 @@
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 
-@import "~bootstrap/scss/vendor/rfs";
 @import "~bootstrap/scss/mixins/deprecate";
 @import "~bootstrap/scss/mixins/breakpoints";
 @import "~bootstrap/scss/mixins/image";
@@ -23,10 +22,12 @@
 @import "~bootstrap/scss/utilities/screenreaders";
 
 @import "variables";
-@import "reset";
-@import "media";
-@import "utils/padding";
 @import "mixins/fonts";
+@import "media";
+@import "reset";
+
+@import "utils/padding";
+@import "utils/rfs";
 @import "mixins/lists";
 @import "mixins/grid";
 @import "mixins/overlay";
