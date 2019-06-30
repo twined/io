@@ -100,10 +100,6 @@ $io-list-inline-padding: (
 $rfs-base-font-size: 1.25rem !default;
 $rfs-font-size-unit: rem !default;
 
-// Breakpoint at where font-size starts decreasing if screen width is smaller
-$rfs-breakpoint: 1920px !default;
-$rfs-breakpoint-unit: px !default;
-
 // Factor of decrease
 $rfs-factor: 10 !default;
 
@@ -112,10 +108,6 @@ $rfs-rem-value: 16 !default;
 
 @if $rfs-font-size-unit != rem and $rfs-font-size-unit != px {
   @error "`#{$rfs-font-size-unit}` is not a valid unit for $rfs-font-size-unit. Use `px` or `rem`.";
-}
-
-@if $rfs-breakpoint-unit != px and $rfs-breakpoint-unit != em and $rfs-breakpoint-unit != rem {
-  @error "`#{$rfs-breakpoint-unit}` is not a valid unit for $rfs-breakpoint-unit. Use `px`, `em` or `rem`.";
 }
 
 // Resize font size based on screen height and width
