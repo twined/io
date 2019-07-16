@@ -106,19 +106,13 @@ $rfs-factor: 10 !default;
 // 1 rem = $rfs-rem-value px
 $rfs-rem-value: 16 !default;
 
+// Safari iframe resize bug: https://github.com/twbs/rfs/issues/14
+$rfs-safari-iframe-resize-bug-fix: false !default;
+
 @if $rfs-font-size-unit != rem and $rfs-font-size-unit != px {
   @error "`#{$rfs-font-size-unit}` is not a valid unit for $rfs-font-size-unit. Use `px` or `rem`.";
 }
 
-// Resize font size based on screen height and width
-$rfs-two-dimensional: false !default;
-
 @if type-of($rfs-factor) != "number" or $rfs-factor <= 1 {
   @error "`#{$rfs-factor}` is not a valid  $rfs-factor, it must be greater than 1.";
 }
-
-// Generate enable or disable classes. Possibilities: false, "enable" or "disable"
-$rfs-class: false !default;
-
-// Safari iframe resize bug: https://github.com/twbs/rfs/issues/14
-$rfs-safari-iframe-resize-bug-fix: false !default;

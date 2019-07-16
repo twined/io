@@ -29,7 +29,7 @@
       @if $lineheight {
         line-height: $lineheight;
       } @else {
-        line-height: map-get($io-line-heights, $bp-name);
+        line-height: map-get($io-line-heights, $bp);
       }
     }
   } @else {
